@@ -1,2 +1,3 @@
-# MC-wepon-generate
-マインクラフト統合版の武器を作れます。
+## ライセンス
+
+このプロジェクトは [MIT License](LICENSE) の下で公開しています。
