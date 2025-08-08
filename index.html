@@ -70,8 +70,8 @@
 
     /* 16×16 キャンバス（拡大表示） */
     #pixelCanvas {
-      width: 640px;
-      height: 640px;
+      width: 800px;
+      height: 800px;
       border: 1px solid #888;
       image-rendering: pixelated;
       background-color: #000;
@@ -89,19 +89,19 @@
 
 <h1>MC weapon generate by CLOVER_creation</h1>
 
-<label>作成者名（半角英数字のみ）</label>
+<label>作成者名（半角英数字のみ、アンダーバーなし）</label>
 <input id="author" pattern="[A-Za-z0-9]+" title="半角英数字のみ" placeholder="例: MyName">
 
-<label>武器のID（半角英数字のみ）</label>
+<label>武器のID（半角英数字のみ、アンダーバーなし）</label>
 <input id="weapon" pattern="[A-Za-z0-9]+" title="半角英数字のみ" placeholder="例: SuperSword">
 
-<label>表示名（日本語可能）</label>
+<label>表示名（すべての言語対応、特殊文字不可）</label>
 <input id="display" placeholder="例: スーパーブレード">
 
 <label>攻撃力</label>
 <input id="damage" type="number" placeholder="例: 10">
 
-<label>エンチャント運（1〜40）</label>
+<label>エンチャント幸運率（1〜40）</label>
 <input id="enchant" type="number" placeholder="例: 20">
 
 <label>耐久値（ダイヤは1550くらい）</label>
@@ -111,8 +111,8 @@
 <div class="editor-container">
   <!-- ツールパネル -->
   <div class="tool-panel">
-    <div id="modeStatus">現在：<span id="modeLabel">描画モード</span></div>
-    <label for="colorPicker">🎨 色を選択</label>
+    <div id="modeStatus">モード：<span id="modeLabel">描画モード</span></div>
+    <label for="colorPicker">色を選択↓</label>
     <input type="color" id="colorPicker" value="#ff0000">
     <button id="btnDraw"   onclick="setMode('draw')">🖌 描画</button>
     <button id="btnErase"  onclick="setMode('erase')">消しゴム</button>
@@ -123,23 +123,23 @@
   <canvas id="pixelCanvas" width="16" height="16"></canvas>
 </div>
 
-<label>manifest のパック名</label>
+<label>アドオンの名前</label>
 <input id="packname" placeholder="例: Super Sword Pack">
 
-<label>manifest の説明文</label>
+<label>アドオンの説明文</label>
 <input id="packdesc" placeholder="例: Adds a super sword">
 
-<h3>ビヘイビア UUID</h3>
+<h3>ビヘイビアパック UUID</h3>
 <label>header.uuid</label><input id="bhHeaderUUID" readonly>
 <label>modules[].uuid</label><input id="bhModuleUUID" readonly>
 <button onclick="genBH()">ビヘイビアUUIDを生成（必須）</button>
 
-<h3>🎨 リソース UUID</h3>
+<h3>リソースパック UUID</h3>
 <label>header.uuid</label><input id="rsHeaderUUID" readonly>
 <label>modules[].uuid</label><input id="rsModuleUUID" readonly>
 <button onclick="genRS()">リソースUUIDを生成（必須）</button>
 
-<button onclick="generate()">📦アドオン生成＆保存</button>
+<button onclick="generate()">アドオン生成＆保存</button>
 
 <script>
   const $ = id => document.getElementById(id);
@@ -241,9 +241,12 @@
     const zip = new JSZip();
 
     // 1) pack_icon.png を自動ロードしてZIPルートに配置
-    await fetch("pack_icon.png")
-      .then(res => res.blob())
-      .then(blob => zip.file("pack_icon.png", blob));
+await fetch("pack_icon.png")
+  .then(res => res.blob())
+  .then(blob => {
+    zip.folder("Behavior_Pack").file("pack_icon.png", blob);
+    zip.folder("Resource_Pack").file("pack_icon.png", blob);
+  });
 
     // 2) Behavior Pack: 武器定義
     zip.file(`Behavior_Pack/items/${weapon}.item.json`, JSON.stringify({
@@ -304,4 +307,5 @@
 </script>
 
 </body>
+
 </html>
